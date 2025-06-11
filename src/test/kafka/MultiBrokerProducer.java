@@ -12,7 +12,9 @@ public class MultiBrokerProducer {
     private final Properties properties = new Properties();
 
     public MultiBrokerProducer() {
-        properties.put("metadata.broker.list", "localhost:9092, localhost:9093");
+        // the broker list should not contain spaces, otherwise the client will
+        // interpret them as part of the host name and fail to connect
+        properties.put("metadata.broker.list", "localhost:9092,localhost:9093");
         properties.put("serializer.class", "kafka.serializer.StringEncoder");
         properties.put("partitioner.class", "test.kafka.SimplePartitioner");
         properties.put("request.required.acks", "1");
@@ -27,7 +29,8 @@ public class MultiBrokerProducer {
         for (long i = 0; i < 10; i++) {
             Integer key = random.nextInt(255);
             String msg = "This message is for key - " + key;
-            producer.send(new KeyedMessage<Integer, String>(topic, msg));
+            // pass the key to ensure messages are partitioned correctly
+            producer.send(new KeyedMessage<Integer, String>(topic, key, msg));
         }
         producer.close();
     }
