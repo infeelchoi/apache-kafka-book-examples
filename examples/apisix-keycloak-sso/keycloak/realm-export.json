@@ -1,0 +1,54 @@
+{
+    "id": "demo",
+    "realm": "demo",
+    "enabled": true,
+    "sslRequired": "none",
+    "registrationAllowed": false,
+    "rememberMe": true,
+    "internationalizationEnabled": false,
+    "clients": [
+        {
+            "id": "apisix-client",
+            "clientId": "apisix",
+            "name": "APISIX Gateway",
+            "enabled": true,
+            "protocol": "openid-connect",
+            "publicClient": false,
+            "secret": "2f3d0365-9c7a-4a2f-8c4d-apisix-demo",
+            "redirectUris": [
+                "http://localhost:9080/*"
+            ],
+            "webOrigins": [
+                "*"
+            ],
+            "directAccessGrantsEnabled": true,
+            "standardFlowEnabled": true,
+            "implicitFlowEnabled": false,
+            "serviceAccountsEnabled": false,
+            "attributes": {
+                "post.logout.redirect.uris": "http://localhost:9080/*"
+            }
+        }
+    ],
+    "users": [
+        {
+            "username": "alice",
+            "enabled": true,
+            "emailVerified": true,
+            "firstName": "Alice",
+            "lastName": "Example",
+            "email": "alice@example.com",
+            "attributes": {},
+            "requiredActions": [],
+            "realmRoles": [],
+            "groups": [],
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password",
+                    "temporary": false
+                }
+            ]
+        }
+    ]
+}
