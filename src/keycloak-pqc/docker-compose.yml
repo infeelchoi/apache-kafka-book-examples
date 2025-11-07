@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    command: ["start", "--auto-build", "--hostname-strict=false"]
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-change_me}
+      JAVA_OPTS_APPEND: "-Djava.security.properties=/opt/keycloak/conf/java.security"
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount Luna Client libraries
+      - ${LUNA_CLIENT_ROOT:-/usr/safenet/lunaclient}/jsp/lib:/opt/luna/lib:ro
+      - ${LUNA_CLIENT_ROOT:-/usr/safenet/lunaclient}/jsp/lib/LunaProvider.jar:/opt/keycloak/providers/LunaProvider.jar:ro
+      # Custom java.security with the Luna provider entries
+      - ./java.security:/opt/keycloak/conf/java.security:ro
+      # Keycloak module with the Luna SPI
+      - ./modules/com:/opt/keycloak/modules/com:ro
+      # Luna keystore pointer file (tokenlabel:<partition>)
+      - ${LUNA_KEYSTORE:-/opt/lunastore}:/opt/keycloak/conf/lunastore:ro
+    depends_on: []
+
